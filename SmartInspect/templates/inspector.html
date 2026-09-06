@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmartInspect | Inspector</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 24px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            background: white;
+            color: #2563eb;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 23px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-top: 3px;
+        }
+
+        .role {
+            background: rgba(255,255,255,0.15);
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        /* MAIN */
+        .container {
+            width: 92%;
+            max-width: 760px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            margin-bottom: 20px;
+        }
+
+        .welcome h2 {
+            font-size: 25px;
+            margin-bottom: 6px;
+        }
+
+        .welcome p {
+            color: #64748b;
+        }
+
+        /* FORM CARD */
+        .form-card {
+            background: white;
+            padding: 32px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .form-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .form-title span {
+            background: #dbeafe;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .form-title h3 {
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 9px;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* LOCATION */
+        .location-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .location-container input {
+            flex: 1;
+        }
+
+        .location-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0 17px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .location-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* AI */
+        .ai-section {
+            margin-top: 10px;
+        }
+
+        .ai-btn {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 11px 17px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .ai-btn:hover {
+            background: #6d28d9;
+        }
+
+        #aiSuggestion {
+            display: none;
+            margin-top: 12px;
+            padding: 13px 15px;
+            background: #f3e8ff;
+            border: 1px solid #ddd6fe;
+            color: #6b21a8;
+            border-radius: 9px;
+            font-weight: bold;
+        }
+
+        /* SUBMIT */
+        .submit-btn {
+            width: 100%;
+            border: none;
+            background: #16a34a;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .submit-btn:hover {
+            background: #15803d;
+        }
+
+        /* FOOTER NOTE */
+        .security-note {
+            text-align: center;
+            margin-top: 18px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+
+            .header {
+                padding: 20px;
+            }
+
+            .role {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            .location-container {
+                flex-direction: column;
+            }
+
+            .location-btn {
+                padding: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="brand">
+
+            <div class="logo">
+                🔎
+            </div>
+
+            <div>
+                <h1>SmartInspect</h1>
+                <p>Real-Time Monitoring & Inspection</p>
+            </div>
+
+        </div>
+
+        <div class="role">
+            👤 Inspector Panel
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="container">
+
+        <div class="welcome">
+
+            <h2>Inspection Report</h2>
+
+            <p>
+                Capture and submit real-time field inspection details.
+            </p>
+
+        </div>
+
+
+        <div class="form-card">
+
+            <div class="form-title">
+
+                <span>📋</span>
+
+                <div>
+                    <h3>New Inspection</h3>
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="/submit-inspection"
+                enctype="multipart/form-data"
+            >
+
+
+                <!-- PHOTO -->
+                <div class="form-group">
+
+                    <label for="photo">
+                        📸 Inspection Photo
+                    </label>
+
+                    <input
+                        type="file"
+                        id="photo"
+                        name="photo"
+                        accept="image/*"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ISSUE -->
+                <div class="form-group">
+
+                    <label for="issue_type">
+                        ⚠️ Issue Type
+                    </label>
+
+                    <select
+                        id="issue_type"
+                        name="issue_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select Issue
+                        </option>
+
+                        <option value="Road Damage">
+                            Road Damage
+                        </option>
+
+                        <option value="Garbage">
+                            Garbage
+                        </option>
+
+                        <option value="Broken Streetlight">
+                            Broken Streetlight
+                        </option>
+
+                        <option value="Water Leakage">
+                            Water Leakage
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEVERITY -->
+                <div class="form-group">
+
+                    <label for="severity">
+                        🚨 Severity
+                    </label>
+
+                    <select
+                        id="severity"
+                        name="severity"
+                        required
+                    >
+
+                        <option value="">
+                            Select Severity
+                        </option>
+
+                        <option value="Low">
+                            Low
+                        </option>
+
+                        <option value="Medium">
+                            Medium
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- LOCATION -->
+                <div class="form-group">
+
+                    <label for="location">
+                        📍 Location
+                    </label>
+
+                    <div class="location-container">
+
+                        <input
+                            type="text"
+                            id="location"
+                            name="location"
+                            placeholder="Click Get Location"
+                            readonly
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="location-btn"
+                            onclick="getLocation()"
+                        >
+                            📍 Get Location
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+                <div class="form-group">
+
+                    <label for="description">
+                        📝 Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe the issue clearly..."
+                        required
+                    ></textarea>
+
+
+                    <!-- AI -->
+                    <div class="ai-section">
+
+                        <button
+                            type="button"
+                            class="ai-btn"
+                            onclick="suggestIssue()"
+                        >
+                            🤖 AI Suggest Issue
+                        </button>
+
+                        <div id="aiSuggestion"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    📤 Submit Inspection
+                </button>
+
+            </form>
+
+
+            <div class="security-note">
+                🔒 Inspection data is securely recorded for administrative review.
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        // ==============================
+        // GET GPS LOCATION
+        // ==============================
+
+        function getLocation() {
+
+            const locationInput =
+                document.getElementById("location");
+
+            if (!navigator.geolocation) {
+
+                locationInput.value =
+                    "Geolocation not supported";
+
+                return;
+            }
+
+            locationInput.value =
+                "Getting location...";
+
+            navigator.geolocation.getCurrentPosition(
+
+                function(position) {
+
+                    const latitude =
+                        position.coords.latitude;
+
+                    const longitude =
+                        position.coords.longitude;
+
+                    locationInput.value =
+                        latitude + ", " + longitude;
+                },
+
+                function(error) {
+
+                    locationInput.value =
+                        "Unable to get location";
+
+                    alert(
+                        "Unable to get your location. Please allow location permission."
+                    );
+                }
+            );
+        }
+
+
+        // ==============================
+        // AI ISSUE SUGGESTION
+        // ==============================
+
+        function suggestIssue() {
+
+            const description =
+                document
+                .getElementById("description")
+                .value
+                .toLowerCase();
+
+            const issueType =
+                document.getElementById("issue_type");
+
+            const suggestion =
+                document.getElementById("aiSuggestion");
+
+
+            if (!description.trim()) {
+
+                suggestion.style.display = "block";
+
+                suggestion.innerText =
+                    "⚠️ Please enter a description first.";
+
+                return;
+            }
+
+
+            let issue = "Other";
+
+
+            if (
+                description.includes("road") ||
+                description.includes("pothole") ||
+                description.includes("damage")
+            ) {
+
+                issue = "Road Damage";
+
+            }
+
+            else if (
+                description.includes("garbage") ||
+                description.includes("waste") ||
+                description.includes("trash")
+            ) {
+
+                issue = "Garbage";
+
+            }
+
+            else if (
+                description.includes("streetlight") ||
+                description.includes("street light") ||
+                description.includes("lamp")
+            ) {
+
+                issue = "Broken Streetlight";
+
+            }
+
+            else if (
+                description.includes("water") ||
+                description.includes("leakage") ||
+                description.includes("pipe")
+            ) {
+
+                issue = "Water Leakage";
+            }
+
+
+            suggestion.style.display = "block";
+
+            suggestion.innerText =
+                "🤖 AI Suggestion: " + issue;
+
+
+            // Automatically select issue
+            issueType.value = issue;
+        }
+
+    </script>
+
+</body>
+</html>
